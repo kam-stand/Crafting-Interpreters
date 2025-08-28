@@ -31,7 +31,7 @@ class Lox
             write("lox> ");
             string line = readln();
             if (line is null || strip(line) == "exit") break;
-            this.runLine(line);
+            this.run(line);
         }
     }
 
@@ -40,7 +40,7 @@ class Lox
         writefln("Running jlox on file %s", this.args[1]);
     }
 
-    private void runLine(string line)
+    private void run(string line)
     {
         writeln("Running line: ", line);
     }
