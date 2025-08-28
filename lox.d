@@ -7,6 +7,7 @@ import std.file;
 class Lox
 {
     public string[] args;
+    public string contents;
 
     this(string[] args)
     {
@@ -20,7 +21,10 @@ class Lox
 
     public void runFile()
     {
+
         writefln("The source file is %s", this.args[1]);
+        // takes in the contents as a singular string
+        this.contents = readText(this.args[1]);
         this.run();
     }
 
@@ -31,17 +35,15 @@ class Lox
             write("lox> ");
             string line = readln();
             if (line is null || strip(line) == "exit") break;
-            this.run(line);
+            this.run();
         }
     }
 
     public void run()
     {
         writefln("Running jlox on file %s", this.args[1]);
+        writefln("Contents are %s \n", this.contents);
+        // TODO: call the scanner class
     }
 
-    private void run(string line)
-    {
-        writeln("Running line: ", line);
-    }
 }
