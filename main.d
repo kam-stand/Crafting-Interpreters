@@ -1,9 +1,24 @@
 import std.stdio;
 import lox;
 
-void main(string[] args) {
-    Lox lox = new Lox(args);
-    lox.runFile(args[0]);
+int main(string[] args)
+{
+    if (args.length > 2)
+    {
+        writeln("Usage: jlox [script]");
+        return -1;
+    }
 
-    scope(exit) destroy(lox);
+    Lox lox = new Lox(args);
+
+    if (args.length == 2)
+    {
+        lox.runFile();
+    }
+    else 
+    {
+        lox.runPrompt();
+    }
+
+    return 0;
 }

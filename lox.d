@@ -1,40 +1,47 @@
 module lox;
 import std.stdio;
 import std.string;
+import std.file;
 
-class Lox {
-    private string[] args;
-    public static bool error = false;
+
+class Lox
+{
+    public string[] args;
+
     this(string[] args)
     {
         this.args = args;
     }
+
     ~this()
     {
-        writeln("Destrying Lox class");
+        writeln("Destroying Lox class");
     }
-    public void runFile(string file_path)
-    { 
-        writefln("The file path is %s: ", file_path); 
-        this.verify_args();
-        if (this.error)
-        {
-            this.runPrompt();
-        }
-        this.run(file_path);
 
+    public void runFile()
+    {
+        writefln("The source file is %s", this.args[1]);
+        this.run();
     }
-    public void runPrompt() {
-        writefln("TODO");
-    }
-    public void run(string source) {writefln("Running lox on %s: ", source);}
-    public void verify_args(){
-        if (this.args.length == 0)
+
+    public void runPrompt()
+    {
+        while (true)
         {
-            this.error = true;
+            write("lox> ");
+            string line = readln();
+            if (line is null || strip(line) == "exit") break;
+            this.runLine(line);
         }
-        else if (this.args.length > 1) {
-            this.error = true;
-        }
+    }
+
+    public void run()
+    {
+        writefln("Running jlox on file %s", this.args[1]);
+    }
+
+    private void runLine(string line)
+    {
+        writeln("Running line: ", line);
     }
 }
