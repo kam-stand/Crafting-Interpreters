@@ -94,6 +94,26 @@ class Scanner
                 while (peek() != '\n' && !isAtEnd())
                     advance();
             }
+            else if (match('*'))
+            {
+                // block comment
+                while (!(peek() == '*' && peekNext() == '/') && !isAtEnd())
+                {
+                    if (peek() == '\n')
+                        line++;
+                    advance();
+                }
+
+                if (isAtEnd())
+                {
+                    writeln("Unterminated block comment at line ", line);
+                    return;
+                }
+
+                // consume the closing */
+                advance(); // consume '*'
+                advance(); // consume '/'
+            }
             else
             {
                 addToken(TokenType.SLASH);
@@ -197,21 +217,26 @@ class Scanner
 
     void scanString()
     {
-        while (peek != '"' && !isAtEnd())
+        while (peek() != '"' && !isAtEnd())
         {
             if (peek() == '\n')
                 line++;
             advance();
         }
+
         if (isAtEnd())
         {
-            writeln("unterminated string ", line);
+            writeln("Unterminated string at line ", line);
             return;
         }
-        advance();
-        string text = cast(string) source[start + 1 .. current - 1];
 
-        addToken(TokenType.STRING, text);
+        advance(); // consume the closing "
+
+        // literal value (without quotes)
+        string value = cast(string) source[start + 1 .. current - 1];
+
+        // lexeme comes from addToken, which uses [start..current]
+        addToken(TokenType.STRING, value);
     }
 
     void scanNumber()
