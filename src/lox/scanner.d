@@ -3,8 +3,9 @@ import lox.token;
 import lox.tokentype;
 
 import std.string;
-
+import std.ascii;
 import std.stdio;
+import std.conv;
 
 void printContent(byte[] source)
 {
@@ -106,9 +107,17 @@ class Scanner
             line++;
             break;
         case '"':
-            parseString();
+            scanString();
             break;
         default:
+            if (isDigit(c))
+            {
+                scanNumber();
+            }
+            else
+            {
+                writefln("[Line: %d] Unexpected character", line);
+            }
             break;
         }
     }
@@ -120,6 +129,26 @@ class Scanner
         t.type = type;
         t.line = line;
         t.lexeme = text;
+        tokens ~= t;
+    }
+
+    void addToken(TokenType type, string value)
+    {
+        Token t;
+        t.type = type;
+        t.line = line;
+        t.lexeme = cast(string) source[start .. current];
+        t.literal.str = value;
+        tokens ~= t;
+    }
+
+    void addToken(TokenType type, double value)
+    {
+        Token t;
+        t.type = type;
+        t.line = line;
+        t.lexeme = cast(string) source[start .. current];
+        t.literal.number = value;
         tokens ~= t;
     }
 
@@ -136,6 +165,11 @@ class Scanner
     char peek()
     {
         return isAtEnd() ? '\0' : source[current];
+    }
+
+    char peekNext()
+    {
+        return (current + 1 >= source.length) ? '\0' : source[current + 1];
     }
 
     void printTokens()
@@ -157,7 +191,7 @@ class Scanner
         return false;
     }
 
-    void parseString()
+    void scanString()
     {
         while (peek != '"' && !isAtEnd())
         {
@@ -172,11 +206,29 @@ class Scanner
         }
         advance();
         string text = cast(string) source[start + 1 .. current - 1];
-        Token t;
-        t.type = TokenType.STRING;
-        t.line = line;
-        t.literal.str = text;
-        t.lexeme = text;
-        tokens ~= t;
+        // Token t;
+        // t.type = TokenType.STRING;
+        // t.line = line;
+        // t.literal.str = text;
+        // t.lexeme = text;
+        // tokens ~= t;
+        addToken(TokenType.STRING, text);
+    }
+
+    void scanNumber()
+    {
+        while (isDigit(peek()))
+        {
+            advance();
+        }
+        if (peek() == '.' && isDigit(peekNext()))
+        {
+            advance();
+            while (isDigit(peek()))
+                advance();
+        }
+        string numText = cast(string) source[start .. current];
+        double value = to!double(numText);
+        addToken(TokenType.NUMBER, value);
     }
 }
