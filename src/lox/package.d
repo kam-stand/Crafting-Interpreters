@@ -7,14 +7,14 @@ public import lox.scanner;
 
 void runFile(string file_path)
 {
-    string source = readText(file_path);
+    byte[] source = cast(byte[]) read(file_path);
     run(source);
+
 }
 
-void run(string source)
+void run(byte[] source)
 {
-    Scanner scanner = new Scanner(source);
-    scanner.printContents();
+    printContent(source);
 }
 
 void runPrompt()
@@ -27,6 +27,6 @@ void runPrompt()
         {
             break;
         }
-        run((line));
+        run(cast(byte[]) line); // casting to byte array
     }
 }
