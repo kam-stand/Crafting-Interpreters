@@ -71,6 +71,18 @@ class Scanner
         case '*':
             addToken(TokenType.STAR);
             break;
+        case '!':
+            addToken((match('=')) ? TokenType.BANG_EQUAL : TokenType.BANG);
+            break;
+        case '=':
+            addToken((match('=')) ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
+            break;
+        case '<':
+            addToken((match('=')) ? TokenType.LESS_EQUAL : TokenType.LESS);
+            break;
+        case '>':
+            addToken((match('=')) ? TokenType.GREATER_EQUAL : TokenType.GREATER);
+            break;
         default:
             break;
         }
@@ -108,6 +120,16 @@ class Scanner
             writefln("TOKEN: %s, Lexeme: %s, [Line: %d]", tokenTypeToString(t.type), t.lexeme, t
                     .line);
         }
+    }
+
+    bool match(char expected)
+    {
+        if (!isAtEnd() && source[current] == expected)
+        {
+            current++;
+            return true;
+        }
+        return false;
     }
 
 }
