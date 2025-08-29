@@ -114,6 +114,10 @@ class Scanner
             {
                 scanNumber();
             }
+            else if (isAlpha(c))
+            {
+                scanIdentifier();
+            }
             else
             {
                 writefln("[Line: %d] Unexpected character", line);
@@ -206,12 +210,7 @@ class Scanner
         }
         advance();
         string text = cast(string) source[start + 1 .. current - 1];
-        // Token t;
-        // t.type = TokenType.STRING;
-        // t.line = line;
-        // t.literal.str = text;
-        // t.lexeme = text;
-        // tokens ~= t;
+
         addToken(TokenType.STRING, text);
     }
 
@@ -230,5 +229,21 @@ class Scanner
         string numText = cast(string) source[start .. current];
         double value = to!double(numText);
         addToken(TokenType.NUMBER, value);
+    }
+
+    void scanIdentifier()
+    {
+        while (isAlphaNum(peek()))
+            advance();
+
+        string text = cast(string) source[start .. current];
+
+        TokenType type;
+        if (auto val = text in keywords)
+            type = *val; // keyword found
+        else
+            type = TokenType.IDENTIFIER;
+
+        addToken(type);
     }
 }
