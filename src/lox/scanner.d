@@ -32,7 +32,11 @@ class Scanner
             start = current;
             scanToken();
         }
-
+        Token t;
+        t.type = TokenType.EOF;
+        t.line = line;
+        t.lexeme = "";
+        tokens ~= t;
         return tokens;
     }
 
@@ -101,6 +105,9 @@ class Scanner
         case '\n':
             line++;
             break;
+        case '"':
+            parseString();
+            break;
         default:
             break;
         }
@@ -150,4 +157,26 @@ class Scanner
         return false;
     }
 
+    void parseString()
+    {
+        while (peek != '"' && !isAtEnd())
+        {
+            if (peek() == '\n')
+                line++;
+            advance();
+        }
+        if (isAtEnd())
+        {
+            writeln("unterminated string ", line);
+            return;
+        }
+        advance();
+        string text = cast(string) source[start + 1 .. current - 1];
+        Token t;
+        t.type = TokenType.STRING;
+        t.line = line;
+        t.literal.str = text;
+        t.lexeme = text;
+        tokens ~= t;
+    }
 }
