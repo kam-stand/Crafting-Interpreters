@@ -15,6 +15,9 @@ void runFile(string file_path)
 void run(byte[] source)
 {
     printContent(source);
+    Scanner scanner = new Scanner(source);
+    auto t = scanner.scanTokens();
+    scanner.printTokens();
 }
 
 void runPrompt()
