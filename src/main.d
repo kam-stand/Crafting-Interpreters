@@ -28,12 +28,12 @@ int main(string[] args)
 
     Expr* expression = makeBinary(
         makeUnary(
-            new Token(TokenType.MINUS, "-", LiteralType.NULL, Literal.init, 1),
-            makeLiteralDouble(123)
+            new Token(TokenType.MINUS, "-", createLiteral(), 1),
+            makeLiteral!double(123.0)
     ),
-    new Token(TokenType.STAR, "*", LiteralType.NULL, Literal.init, 1),
+    new Token(TokenType.STAR, "*", createLiteral(), 1),
     makeGrouping(
-        makeLiteralDouble(45.67)
+        makeLiteral!double(45.67)
     )
     );
 
