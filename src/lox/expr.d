@@ -34,7 +34,7 @@ struct AssignExpr
 struct CallExpr
 {
     Expr* callee;
-    Token* paren;
+    Token* parent;
     Expr*[] arguments;
 }
 

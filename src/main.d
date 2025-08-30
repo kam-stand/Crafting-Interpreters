@@ -26,10 +26,11 @@ int main(string[] args)
         runPrompt();
     }
 
+    // BINARY EXPRESSION
+
     Expr* left = cast(Expr*) GC.malloc(Expr.sizeof);
     left.type = ExprType.EXPR_LITERAL;
     left.literal.value.number = 12;
-    // printExpr(left);
 
     Token* operator = cast(Token*) GC.malloc(Token.sizeof);
     operator.line = 1;
@@ -39,7 +40,6 @@ int main(string[] args)
     Expr* right = cast(Expr*) GC.malloc(Expr.sizeof);
     right.type = ExprType.EXPR_LITERAL;
     right.literal.value.number = 12;
-    // printExpr(right);
 
     BinaryExpr* binaryExpr = cast(BinaryExpr*) GC.malloc(BinaryExpr.sizeof);
     binaryExpr.left = left;
@@ -51,6 +51,19 @@ int main(string[] args)
     expr.binary = binaryExpr;
 
     printExpr(expr);
+
+    // VARIABLE EXPRESSION
+    VariableExpr* lhs = cast(VariableExpr*) GC.malloc(VariableExpr.sizeof);
+    Token* t = cast(Token*) GC.malloc(Token.sizeof);
+    t.type = TokenType.VAR;
+    t.line = 1;
+    t.lexeme = "var";
+    lhs.name = t;
+
+    expr.type = ExprType.EXPR_VARIABLE;
+    expr.variable = lhs;
+    printExpr(expr);
+
     return 0;
 
 }
