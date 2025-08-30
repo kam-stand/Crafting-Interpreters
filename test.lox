@@ -1,13 +1,1 @@
-// this is a comment /
-{}()
-"Hello world"
-/**
-
-
-multi line comment
-
-*/
-
-if (2> 3){
-    print "hello world"
-}
+"hi"
