@@ -73,43 +73,43 @@ public string tokenTypeToString(TokenType type)
     switch (type)
     {
     case TokenType.LEFT_PAREN:
-        return "(";
+        return "LEFT_PAREN";
     case TokenType.RIGHT_PAREN:
-        return ")";
+        return "RIGHT_PAREN";
     case TokenType.LEFT_BRACE:
-        return "{";
+        return "LEFT_BRACE";
     case TokenType.RIGHT_BRACE:
-        return "}";
+        return "RIGHT_BRACE";
     case TokenType.COMMA:
-        return ",";
+        return "COMMA";
     case TokenType.DOT:
-        return ".";
+        return "DOT";
     case TokenType.MINUS:
-        return "-";
+        return "MINUS";
     case TokenType.PLUS:
-        return "+";
+        return "PLUS";
     case TokenType.SEMICOLON:
-        return ";";
+        return "SEMICOLON";
     case TokenType.SLASH:
-        return "/";
+        return "SLASH";
     case TokenType.STAR:
-        return "*";
+        return "STAR";
     case TokenType.BANG:
-        return "!";
+        return "BANG";
     case TokenType.BANG_EQUAL:
-        return "!=";
+        return "BANG_EQUAL";
     case TokenType.EQUAL:
-        return "=";
+        return "EQUAL";
     case TokenType.EQUAL_EQUAL:
-        return "==";
+        return "EQUAL_EQUAL";
     case TokenType.GREATER:
-        return ">";
+        return "GREATER";
     case TokenType.GREATER_EQUAL:
-        return ">=";
+        return "GREATER_EQUAL";
     case TokenType.LESS:
-        return "<";
+        return "LESS";
     case TokenType.LESS_EQUAL:
-        return "<=";
+        return "LESS_EQUAL";
     case TokenType.IDENTIFIER:
         return "IDENTIFIER";
     case TokenType.STRING:

@@ -1,2 +1,2 @@
-./test*.lox
-./bin/*.o
+test*.lox
+/bin/*.o

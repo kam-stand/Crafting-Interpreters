@@ -162,6 +162,7 @@ class Scanner
         t.type = type;
         t.line = line;
         t.lexeme = cast(string) source[start .. current];
+        t.literal_type = LiteralType.STRING;
         t.literal.str = value;
         tokens ~= t;
     }
@@ -172,6 +173,7 @@ class Scanner
         t.type = type;
         t.line = line;
         t.lexeme = cast(string) source[start .. current];
+        t.literal_type = LiteralType.NUMBER;
         t.literal.number = value;
         tokens ~= t;
     }
