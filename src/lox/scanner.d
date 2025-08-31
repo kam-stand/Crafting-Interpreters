@@ -33,11 +33,6 @@ class Scanner
             start = current;
             scanToken();
         }
-        // Token t;
-        // t.type = TokenType.EOF;
-        // t.line = line;
-        // t.lexeme = "";
-        // tokens ~= t;
         tokens ~= createToken("", TokenType.EOF, line);
         return tokens;
     }
@@ -150,35 +145,19 @@ class Scanner
     void addToken(TokenType type)
     {
         string lexeme = cast(string) source[start .. current]; // slice from start to current
-        // Token t;
-        // t.type = type;
-        // t.line = line;
-        // t.lexeme = text;
-        // tokens ~= t;
         tokens ~= createToken(lexeme, type, line, null);
     }
 
     void addToken(TokenType type, string str)
     {
-        // Token t;
-        // t.type = type;
-        // t.line = line;
         string lexeme = cast(string) source[start .. current];
-        // t.literal_type = LiteralType.STRING;
-        // t.literal.str = value;
-        // tokens ~= t;
         tokens ~= createToken(lexeme, type, line, createLiteral(str));
     }
 
     void addToken(TokenType type, double number)
     {
-        // Token t;
-        // t.type = type;
-        // t.line = line;
         string lexeme = cast(string) source[start .. current];
-        // t.literal_type = LiteralType.NUMBER;
-        // t.literal.number = value;
-        // tokens ~= t;
+
         tokens ~= createToken(lexeme, type, line, createLiteral(number));
     }
 

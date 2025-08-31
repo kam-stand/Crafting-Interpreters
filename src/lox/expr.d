@@ -77,6 +77,10 @@ enum ExprType
     EXPR_GROUPING,
     EXPR_ASSIGN,
     EXPR_CALL,
+    EXPR_GET,
+    EXPR_SUPER,
+    EXPR_SET,
+    EXPR_LOGICAL,
     EXPR_VARIABLE
 }
 
@@ -92,6 +96,10 @@ struct Expr
         AssignExpr* assign;
         CallExpr* call;
         VariableExpr* variable;
+        LogicalExpr* logical;
+        SetExpr* set;
+        GetExpr* get;
+        SuperExpr* superExpr;
     }
 }
 
@@ -122,51 +130,6 @@ Expr* makeGrouping(Expr* expression)
     return expr;
 }
 
-// Expr* makeLiteralDouble(double num)
-// {
-//     auto lit = new Literal;
-//     lit.number = num;
-
-//     auto litExpr = new LiteralExpr;
-//     litExpr.value = lit;
-
-//     auto expr = new Expr;
-//     expr.type = ExprType.EXPR_LITERAL;
-//     expr.literal = litExpr;
-
-//     return expr;
-// }
-
-// Expr* makeLiteralString(string s)
-// {
-//     auto lit = new Literal;
-//     lit.str = s;
-
-//     auto litExpr = new LiteralExpr;
-//     litExpr.value = lit;
-
-//     auto expr = new Expr;
-//     expr.type = ExprType.EXPR_LITERAL;
-//     expr.literal = litExpr;
-
-//     return expr;
-// }
-
-// Expr* makeLiteralBool(bool b)
-// {
-//     auto lit = new Literal;
-//     lit.boolean = b;
-
-//     auto litExpr = new LiteralExpr;
-//     litExpr.value = lit;
-
-//     auto expr = new Expr;
-//     expr.type = ExprType.EXPR_LITERAL;
-//     expr.literal = litExpr;
-
-//     return expr;
-// }
-
 Expr* makeLiteral(T)(T value)
 {
     auto lit = new Literal;
@@ -188,4 +151,60 @@ Expr* makeLiteral(T)(T value)
     expr.literal = litExpr;
 
     return expr;
+}
+
+Expr* makeLogical(Expr* left, Token* operator, Expr* right)
+{
+    LogicalExpr* logical = new LogicalExpr(left, operator, right);
+    Expr* expr = new Expr;
+    expr.type = ExprType.EXPR_LOGICAL;
+    expr.logical = logical;
+    return expr;
+}
+
+Expr* makeSet(Expr* object, Token* operator, Expr* value)
+{
+    SetExpr* set = new SetExpr(object, operator, value);
+    Expr* expr = new Expr;
+    expr.type = ExprType.EXPR_SET;
+    expr.set = set;
+    return expr;
+}
+
+Expr* makeSuper(Token* keyword, Token* method)
+{
+    SuperExpr* superExpr = new SuperExpr(keyword, method);
+    Expr* expr = new Expr;
+    expr.type = ExprType.EXPR_SUPER;
+    expr.superExpr = superExpr;
+    return expr;
+}
+
+Expr* makeAssign(Token* name, Expr* value)
+{
+    AssignExpr* assign = new AssignExpr(name, value);
+    Expr* expr = new Expr;
+    expr.type = ExprType.EXPR_ASSIGN;
+    expr.assign = assign;
+    return expr;
+}
+
+Expr* makeCall(Expr* callee, Token* parent, Expr*[] arguments)
+{
+
+    CallExpr* call = new CallExpr(callee, parent, arguments);
+    Expr* expr = new Expr;
+    expr.type = ExprType.EXPR_CALL;
+    expr.call = call;
+    return expr;
+}
+
+Expr* makeGet(Expr* object, Token* name)
+{
+    GetExpr* get = new GetExpr(object, name);
+    Expr* expr = new Expr;
+    expr.type = ExprType.EXPR_GET;
+    expr.get = get;
+    return expr;
+
 }
