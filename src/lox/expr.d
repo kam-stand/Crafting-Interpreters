@@ -132,21 +132,33 @@ Expr* makeGrouping(Expr* expression)
 
 Expr* makeLiteral(T)(T value)
 {
-    auto lit = new Literal;
+    Literal* lit = new Literal;
 
     static if (is(T == string))
+    {
+        lit.type = LiteralType.STRING;
         lit.str = value;
+    }
     else static if (is(T == double))
+    {
+        lit.type = LiteralType.NUMBER;
         lit.number = value;
+    }
     else static if (is(T == bool))
+    {
+        lit.type = LiteralType.BOOLEAN;
         lit.boolean = value;
+    }
+    else static if (is(T == typeof(null))) // null case
+        lit.type = LiteralType.NULL;
+    // nothing stored in the union
     else
         static assert(false, "Unsupported literal type");
 
-    auto litExpr = new LiteralExpr;
+    LiteralExpr* litExpr = new LiteralExpr;
     litExpr.value = lit;
 
-    auto expr = new Expr;
+    Expr* expr = new Expr;
     expr.type = ExprType.EXPR_LITERAL;
     expr.literal = litExpr;
 

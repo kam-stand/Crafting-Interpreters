@@ -1,5 +1,7 @@
 module lox.error;
 import std.stdio;
+import lox.token;
+import lox.tokentype;
 
 void error(int line, string message)
 {
@@ -8,5 +10,31 @@ void error(int line, string message)
 
 void report(int line, string where, string message)
 {
-    writefln("[line %s ] Error %s: %s", line, where, message);
+    writefln("[line %s] Error%s: %s", line, where, message);
+}
+
+// ParseError should be an Exception, not a struct
+class ParseError : Exception
+{
+    Token* token;
+
+    this(Token* token, string message)
+    {
+        super(message);
+        this.token = token;
+    }
+}
+
+ParseError parseError(Token* token, string message)
+{
+    if (token.type == TokenType.EOF)
+    {
+        report(token.line, " at end", message);
+    }
+    else
+    {
+        report(token.line, " at '" ~ token.lexeme ~ "'", message);
+    }
+
+    return new ParseError(token, message);
 }

@@ -9,40 +9,54 @@ void astPrinter(Expr* expr)
     switch (expr.type)
     {
     case ExprType.EXPR_BINARY:
-        write(" ( ");
-        write(expr.binary.operator.lexeme);
+        write("(");
+        write(expr.binary.operator.lexeme, " ");
         astPrinter(expr.binary.left);
+        write(" ");
         astPrinter(expr.binary.right);
-        write(" )");
+        write(")");
         break;
 
     case ExprType.EXPR_GROUPING:
-        write(" ( ");
-        write("group ");
+        write("(group ");
         astPrinter(expr.grouping.expression);
-        write(" )");
+        write(")");
         break;
 
     case ExprType.EXPR_LITERAL:
-        printLiteral(expr.literal);
+        write(literalToString(expr.literal.value));
         break;
 
     case ExprType.EXPR_UNARY:
-        write(" ( ");
-        write(expr.unary.operator.lexeme);
+        write("(");
+        write(expr.unary.operator.lexeme, " ");
         astPrinter(expr.unary.right);
-        write(" )");
+        write(")");
         break;
-        // TODO: Exhaust all other expression types
+
     default:
-        writeln("undefined expression type");
+        writeln();
+        write("undefined");
         break;
     }
-    write(" ");
-
 }
 
 void printLiteral(LiteralExpr* literal)
 {
-    write(literal.value.number);
+    auto lit = literal.value;
+    final switch (lit.type)
+    {
+    case LiteralType.STRING:
+        write(lit.str);
+        break;
+    case LiteralType.NUMBER:
+        write(lit.number);
+        break;
+    case LiteralType.BOOLEAN:
+        write(lit.boolean ? "true" : "false");
+        break;
+    case LiteralType.NULL:
+        write("nil"); // or "null"
+        break;
+    }
 }

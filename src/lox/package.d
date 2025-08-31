@@ -2,6 +2,9 @@ module lox;
 import std.file;
 import std.stdio;
 import std.string;
+import lox.parser;
+import lox.expr;
+import lox.astprinter;
 
 public import lox.scanner;
 
@@ -14,10 +17,25 @@ void runFile(string file_path)
 
 void run(byte[] source)
 {
-    printContent(source);
+    //printContent(source);
+    // Scanner scanner = new Scanner(source);
+    //cauto t = scanner.scanTokens();
+    // scanner.printTokens();
+    // Parser parser = new Parser(t);
+    // Expr* expression = parser.parse();
+    // astPrinter(expression);
+    // writeln();
     Scanner scanner = new Scanner(source);
-    auto t = scanner.scanTokens();
-    scanner.printTokens();
+    auto tokens = scanner.scanTokens();
+    Parser parser = new Parser(tokens);
+
+    while (!parser.isAtEnd())
+    {
+        Expr* expr = parser.expression(); // parse next expression
+        astPrinter(expr);
+        writeln(); // separate expressions
+    }
+
 }
 
 void runPrompt()

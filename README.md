@@ -4,14 +4,14 @@
 
 We are writing the interpreter for the lox language in the D programmig language.
 
-## Chapters Completed
+## Chapter
 
 ### A Tree-Walk Interpreter
 
     [x]Scanning
      Design Note: Implicit Semicolons
-    [ ] Representing Code
-    [ ] Parsing Expressions
+    [x] Representing Code
+    [x] Parsing Expressions
      Design Note: Logic Versus History
     [ ] Evaluating Expressions
      Design Note: Static and Dynamic Typing
