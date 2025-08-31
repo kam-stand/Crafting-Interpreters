@@ -2,13 +2,14 @@ module lox.interpreter;
 import lox.expr;
 import lox.token;
 import lox.tokentype;
+import lox.value;
 
 class Interpreter
 {
     // TODO: create VALUE struct which contains the final literal evaluation
     // TODO: CheckNumberOperands()
 
-    double evaluateExpression(Expr* expression)
+    Value evaluateExpression(Expr* expression)
     {
         switch (expression.type)
         {
@@ -29,73 +30,119 @@ class Interpreter
         }
     }
 
-    double evalLiteral(LiteralExpr* expr)
+    Value evalLiteral(LiteralExpr* expr)
     {
         final switch (expr.value.type)
         {
         case LiteralType.NUMBER:
-            return cast(double) expr.value.number;
+            // return cast(double) expr.value.number;
+            return value(expr.value.number);
         case LiteralType.BOOLEAN:
-            return expr.value.boolean ? 1.0 : 0.0;
+            // return expr.value.boolean ? 1.0 : 0.0;
+            return value(expr.value.boolean);
         case LiteralType.NULL:
-            return 0.0;
+            // return 0.0;
+            return value();
+
         case LiteralType.STRING:
-            assert(0, "Strings not yet supported in evaluation");
+            // assert(0, "Strings not yet supported in evaluation");
+            return value(expr.value.str);
         }
     }
 
-    double evalUnary(UnaryExpr* expr)
+    Value evalUnary(UnaryExpr* expr)
     {
-        double right = evaluateExpression(expr.right);
+        Value right = evaluateExpression(expr.right);
         Token* op = expr.operator;
 
         switch (op.type)
         {
         case TokenType.MINUS:
-            return -right;
+            return value(-right.number);
         case TokenType.BANG:
-            return (right == 0) ? 1.0 : 0.0;
+            bool isFalsey = (right.type == LiteralType.NULL) || (
+                right.type == LiteralType.BOOLEAN && !right.val);
+            return value(!isFalsey);
         default:
             assert(0, "Unknown unary operator");
         }
     }
 
-    double evalBinary(BinaryExpr* expr)
+    bool isEqual(Value a, Value b)
+    {
+        if (a.type != b.type)
+            return false;
+        final switch (a.type)
+        {
+        case LiteralType.NUMBER:
+            return a.number == b.number;
+        case LiteralType.BOOLEAN:
+            return a.val == b.val;
+        case LiteralType.STRING:
+            return a.str == b.str;
+        case LiteralType.NULL:
+            return true;
+        }
+        return false;
+    }
+
+    Value evalBinary(BinaryExpr* expr)
     {
         auto lhs = evaluateExpression(expr.left);
         auto rhs = evaluateExpression(expr.right);
 
         switch (expr.operator.type)
         {
-            // TODO: checkNumberOperand through value struct
         case TokenType.PLUS:
-            return lhs + rhs;
+            if (lhs.type == LiteralType.NUMBER && rhs.type == LiteralType.NUMBER)
+                return value(lhs.number + rhs.number);
+            else if (lhs.type == LiteralType.STRING && rhs.type == LiteralType.STRING)
+                return value(lhs.str ~ rhs.str);
+            else
+                assert(0, "Operands must be two numbers or two strings");
+
         case TokenType.MINUS:
-            return lhs - rhs;
+            assert(lhs.type == LiteralType.NUMBER && rhs.type == LiteralType.NUMBER, "Operands must be numbers");
+            return value(lhs.number - rhs.number);
+
         case TokenType.STAR:
-            return lhs * rhs;
+            assert(lhs.type == LiteralType.NUMBER && rhs.type == LiteralType.NUMBER, "Operands must be numbers");
+            return value(lhs.number * rhs.number);
+
         case TokenType.SLASH:
-            return lhs / rhs;
+            assert(lhs.type == LiteralType.NUMBER && rhs.type == LiteralType.NUMBER, "Operands must be numbers");
+            return value(lhs.number / rhs.number);
+
         case TokenType.GREATER:
-            return (lhs > rhs) ? 1.0 : 0.0;
+            assert(lhs.type == LiteralType.NUMBER && rhs.type == LiteralType.NUMBER, "Operands must be numbers");
+            return value(lhs.number > rhs.number);
+
         case TokenType.GREATER_EQUAL:
-            return (lhs >= rhs) ? 1.0 : 0.0;
+            assert(lhs.type == LiteralType.NUMBER && rhs.type == LiteralType.NUMBER, "Operands must be numbers");
+            return value(lhs.number >= rhs.number);
+
         case TokenType.LESS:
-            return (lhs < rhs) ? 1.0 : 0.0;
+            assert(lhs.type == LiteralType.NUMBER && rhs.type == LiteralType.NUMBER, "Operands must be numbers");
+            return value(lhs.number < rhs.number);
+
         case TokenType.LESS_EQUAL:
-            return (lhs <= rhs) ? 1.0 : 0.0;
+            assert(lhs.type == LiteralType.NUMBER && rhs.type == LiteralType.NUMBER, "Operands must be numbers");
+            return value(lhs.number <= rhs.number);
+
         case TokenType.EQUAL_EQUAL:
-            return (lhs == rhs) ? 1.0 : 0.0;
+            return value(isEqual(lhs, rhs));
+
         case TokenType.BANG_EQUAL:
-            return (lhs != rhs) ? 1.0 : 0.0;
+            return value(!isEqual(lhs, rhs));
 
         default:
             assert(0, "Unknown binary operator");
         }
     }
 
-    double evalGrouping(GroupingExpr* expr)
+    Value evalGrouping(GroupingExpr* expr)
     {
         return evaluateExpression(expr.expression);
     }
+
 }

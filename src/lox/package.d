@@ -6,6 +6,7 @@ import lox.parser;
 import lox.expr;
 import lox.astprinter;
 import lox.interpreter;
+import lox.value;
 
 public import lox.scanner;
 
@@ -18,14 +19,6 @@ void runFile(string file_path)
 
 void run(byte[] source)
 {
-    //printContent(source);
-    // Scanner scanner = new Scanner(source);
-    //cauto t = scanner.scanTokens();
-    // scanner.printTokens();
-    // Parser parser = new Parser(t);
-    // Expr* expression = parser.parse();
-    // astPrinter(expression);
-    // writeln();
     Scanner scanner = new Scanner(source);
     auto tokens = scanner.scanTokens();
     Parser parser = new Parser(tokens);
@@ -36,7 +29,9 @@ void run(byte[] source)
         astPrinter(expr);
         writeln(); // separate expressions
         Interpreter interpreter = new Interpreter();
-        writeln(interpreter.evaluateExpression(expr));
+        auto result = interpreter.evaluateExpression(expr);
+        writeln(stringify(result));
+
     }
 
 }

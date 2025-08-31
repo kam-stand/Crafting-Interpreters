@@ -1,6 +1,8 @@
 module lox.value;
 import lox.token;
 import std.stdio;
+import std.format;
+import std.conv;
 
 /** 
  * VALUE
@@ -56,4 +58,19 @@ Value value()
     v.type = LiteralType.NULL;
 
     return v;
+}
+
+string stringify(Value value)
+{
+    final switch (value.type)
+    {
+    case LiteralType.NUMBER:
+        return format("%s", to!string(value.number));
+    case LiteralType.BOOLEAN:
+        return value.val ? "true" : "false";
+    case LiteralType.STRING:
+        return value.str;
+    case LiteralType.NULL:
+        return "nil";
+    }
 }
