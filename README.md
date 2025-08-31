@@ -13,7 +13,7 @@ We are writing the interpreter for the lox language in the D programmig language
     [x] Representing Code
     [x] Parsing Expressions
      Design Note: Logic Versus History
-    [ ] Evaluating Expressions
+    [x] Evaluating Expressions
      Design Note: Static and Dynamic Typing
     [ ] Statements and State
      Design Note: Implicit Variable Declaration
