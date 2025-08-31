@@ -5,6 +5,7 @@ import std.string;
 import lox.parser;
 import lox.expr;
 import lox.astprinter;
+import lox.interpreter;
 
 public import lox.scanner;
 
@@ -34,6 +35,8 @@ void run(byte[] source)
         Expr* expr = parser.expression(); // parse next expression
         astPrinter(expr);
         writeln(); // separate expressions
+        Interpreter interpreter = new Interpreter();
+        writeln(interpreter.evaluateExpression(expr));
     }
 
 }

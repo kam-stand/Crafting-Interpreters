@@ -38,3 +38,29 @@ ParseError parseError(Token* token, string message)
 
     return new ParseError(token, message);
 }
+
+class RuntimeError : Exception
+{
+    Token* token;
+
+    this(Token* token, string message)
+    {
+        super(message);
+        this.token = token;
+
+    }
+}
+
+RuntimeError runtimeError(Token* token, string message)
+{
+    if (token.type == TokenType.EOF)
+    {
+        report(token.line, " at end", message);
+    }
+    else
+    {
+        report(token.line, " at '" ~ token.lexeme ~ "'", message);
+    }
+
+    return new RuntimeError(token, message);
+}
