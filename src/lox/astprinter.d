@@ -33,6 +33,7 @@ void astPrinter(Expr* expr)
         astPrinter(expr.unary.right);
         write(" )");
         break;
+        // TODO: Exhaust all other expression types
     default:
         writeln("undefined expression type");
         break;

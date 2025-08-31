@@ -26,18 +26,18 @@ int main(string[] args)
         runPrompt();
     }
 
-    Expr* expression = makeBinary(
-        makeUnary(
-            new Token(TokenType.MINUS, "-", createLiteral(), 1),
-            makeLiteral!double(123.0)
-    ),
-    new Token(TokenType.STAR, "*", createLiteral(), 1),
-    makeGrouping(
-        makeLiteral!double(45.67)
-    )
-    );
+    // Expr* expression = makeBinary(
+    //     makeUnary(
+    //         new Token(TokenType.MINUS, "-", createLiteral(), 1),
+    //         makeLiteral!double(123.0)
+    // ),
+    // new Token(TokenType.STAR, "*", createLiteral(), 1),
+    // makeGrouping(
+    //     makeLiteral!double(45.67)
+    // )
+    // );
 
-    astPrinter(expression);
+    // astPrinter(expression);
 
     return 0;
 

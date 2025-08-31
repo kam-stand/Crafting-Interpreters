@@ -1,7 +1,7 @@
 module lox.scanner;
 import lox.token;
 import lox.tokentype;
-
+import lox.error;
 import std.string;
 import std.ascii;
 import std.stdio;
@@ -136,7 +136,7 @@ class Scanner
             }
             else
             {
-                writefln("[Line: %d] Unexpected character", line);
+                error(line, "Unexpected character");
             }
             break;
         }
@@ -160,6 +160,8 @@ class Scanner
 
         tokens ~= createToken(lexeme, type, line, createLiteral(number));
     }
+
+    // TODO: addToke(TokenType type bool val)
 
     bool isAtEnd()
     {
@@ -210,7 +212,7 @@ class Scanner
 
         if (isAtEnd())
         {
-            writeln("Unterminated string at line ", line);
+            error(line, "Unterminated string.");
             return;
         }
 
