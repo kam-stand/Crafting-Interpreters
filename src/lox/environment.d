@@ -1,5 +1,8 @@
+module lox.environment;
 import lox.value;
 import lox.token;
+import lox.error;
+
 import lox;
 
 class Environment
