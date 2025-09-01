@@ -65,7 +65,7 @@ class Parser
 
         while (!isAtEnd())
         {
-            statements ~= statement();
+            statements ~= declaration();
         }
 
         return statements;
