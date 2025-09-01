@@ -121,6 +121,15 @@ Expr* makeUnary(Token* operator, Expr* right)
     return expr;
 }
 
+Expr* makeVariable(Token* name)
+{
+    VariableExpr* variable = new VariableExpr(name);
+    Expr* expr = new Expr;
+    expr.type = ExprType.EXPR_VARIABLE;
+    expr.variable = variable;
+    return expr;
+}
+
 Expr* makeGrouping(Expr* expression)
 {
     GroupingExpr* group = new GroupingExpr(expression);
