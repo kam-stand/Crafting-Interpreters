@@ -141,7 +141,7 @@ unittest
 
 unittest
 {
-    writeln("========== EDGE CASE: OPERATORS ==========");
+    writeln("========== EDGE CASE OPERATORS ==========");
 
     string test_file = "operators.lox";
     string content = "! == != =";
