@@ -71,6 +71,36 @@ class Parser
         return statements;
     }
 
+    Stmt* declaration()
+    {
+        try
+        {
+            if (match([TokenType.VAR]))
+            {
+                return varDeclaration();
+            }
+            return statement();
+        }
+        catch (ParseError error)
+        {
+            synchronize();
+            return null;
+        }
+    }
+
+    Stmt* varDeclaration()
+    {
+        Token* name = consume(TokenType.IDENTIFIER, "Expect variable name.");
+        Expr* initializer = null;
+        if (match([TokenType.EQUAL]))
+        {
+            initializer = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Expect ';' after varoable declaration");
+        return makeVariableStmt(name, initializer);
+    }
+
     Stmt* statement()
     {
         return match([TokenType.PRINT]) ? printStatement() : expressionStatement();
@@ -129,6 +159,34 @@ class Parser
         }
 
         return false;
+
+    }
+
+    void synchronize()
+    {
+        advance();
+        while (!isAtEnd())
+        {
+            if (previous().type == TokenType.SEMICOLON)
+            {
+                return;
+            }
+
+            switch (peek().type)
+            {
+            case TokenType.CLASS:
+            case TokenType.FUN:
+            case TokenType.VAR:
+            case TokenType.IF:
+            case TokenType.WHILE:
+            case TokenType.PRINT:
+            case TokenType.RETURN:
+            default:
+                return;
+
+            }
+            advance();
+        }
 
     }
 
@@ -229,8 +287,10 @@ class Parser
     {
         if (match([TokenType.FALSE]))
             return makeLiteral(false);
+
         if (match([TokenType.TRUE]))
             return makeLiteral(true);
+
         if (match([TokenType.NIL]))
             return makeLiteral(null);
 
@@ -239,6 +299,9 @@ class Parser
 
         if (match([TokenType.STRING]))
             return makeLiteral(previous().literal.str);
+
+        if (match([TokenType.IDENTIFIER]))
+            return makeVariable(previous());
 
         if (match([TokenType.LEFT_PAREN]))
         {
