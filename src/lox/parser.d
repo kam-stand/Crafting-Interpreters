@@ -2,6 +2,7 @@ module lox.parser;
 import lox.token;
 import lox.expr;
 import lox.error;
+import lox.stmt;
 
 import lox.tokentype;
 import std.stdio;
@@ -46,16 +47,47 @@ class Parser
         current = 0;
     }
 
-    Expr* parse()
+    // Expr* parse()
+    // {
+    //     try
+    //     {
+    //         return expression();
+    //     }
+    //     catch (ParseError error)
+    //     {
+    //         return null;
+    //     }
+    // }
+
+    Stmt*[] parse()
     {
-        try
+        Stmt*[] statements = [];
+
+        while (!isAtEnd())
         {
-            return expression();
+            statements ~= statement();
         }
-        catch (ParseError error)
-        {
-            return null;
-        }
+
+        return statements;
+    }
+
+    Stmt* statement()
+    {
+        return match([TokenType.PRINT]) ? printStatement() : expressionStatement();
+    }
+
+    Stmt* printStatement()
+    {
+        Expr* value = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return makeprintStmt(value);
+    }
+
+    Stmt* expressionStatement()
+    {
+        Expr* expr = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+        return makeExprStmt(expr);
     }
 
     Token* peek()

@@ -101,3 +101,86 @@ struct Stmt
 }
 
 // TODO: create funciont for all StmtTypes 
+
+Stmt* makeBlockStmt(Stmt*[] statements)
+{
+    BlockStmt* blockStmt = new BlockStmt(statements);
+    Stmt* stmt = new Stmt;
+    stmt.type = StmtType.BLOCK_STMT;
+    stmt.blockStmt = blockStmt;
+    return stmt;
+}
+
+Stmt* makeClassStmt(Token* name, VariableExpr* superclass, Stmt*[] methods)
+{
+    ClassStmt* classStmt = new ClassStmt(name, superclass, methods);
+    Stmt* stmt = new Stmt;
+    stmt.type = StmtType.CLASS_STMT;
+    stmt.classStmt = classStmt;
+    return stmt;
+
+}
+
+Stmt* makeExprStmt(Expr* expressions)
+{
+    ExprStmt* exprStmt = new ExprStmt(expressions);
+    Stmt* stmt = new Stmt;
+    stmt.type = StmtType.EXPR_STMT;
+    stmt.exprStmt = exprStmt;
+    return stmt;
+}
+
+Stmt* makeFuncStmt(Token* name, Token*[] params, Stmt*[] body)
+{
+
+    FuncStmt* functStmt = new FuncStmt(name, params, body);
+    Stmt* stmt = new Stmt;
+    stmt.type = StmtType.FUNC_STMT;
+    stmt.funcStmt = functStmt;
+    return stmt;
+}
+
+Stmt* makeIfStmt(Expr* condition, Stmt* thenBranch, Stmt* elseBranch)
+{
+    IfStmt* ifStmt = new IfStmt(condition, thenBranch, elseBranch);
+    Stmt* stmt = new Stmt;
+    stmt.type = StmtType.IF_STMT;
+    stmt.ifStmt = ifStmt;
+    return stmt;
+}
+
+Stmt* makeprintStmt(Expr* expression)
+{
+    PrintStmt* printStmt = new PrintStmt(expression);
+    Stmt* stmt = new Stmt;
+    stmt.type = StmtType.PRINT_STMT;
+    stmt.printStmt = printStmt;
+    return stmt;
+}
+
+Stmt* makeReturnStmt(Token* keyword, Expr* value)
+{
+    ReturnStmt* returnStmt = new ReturnStmt(keyword, value);
+    Stmt* stmt = new Stmt;
+    stmt.type = StmtType.RETURN_STMT;
+    stmt.returnStmt = returnStmt;
+    return stmt;
+}
+
+Stmt* makeVariableStmt(Token* name, Expr* initializer)
+{
+    VariableStmt* varStmt = new VariableStmt(name, initializer);
+    Stmt* stmt = new Stmt;
+    stmt.type = StmtType.VARIABLE_STMT;
+    stmt.varStmt = varStmt;
+    return stmt;
+}
+
+Stmt* makeWhileStmt(Expr* condition, Stmt* body)
+{
+    WhileStmt* whileStmt = new WhileStmt(condition, body);
+    Stmt* stmt = new Stmt;
+    stmt.type = StmtType.WHILE_STMT;
+    stmt.whileStmt = whileStmt;
+    return stmt;
+}
