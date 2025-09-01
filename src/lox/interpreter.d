@@ -92,6 +92,12 @@ class Interpreter
 
         case ExprType.EXPR_GROUPING:
             return evalGrouping(expression.grouping);
+
+        case ExprType.EXPR_ASSIGN:
+            Value val = evaluateExpression(expression.assign.value);
+            environment.assign(expression.assign.name, val);
+            return val;
+
         case ExprType.EXPR_VARIABLE:
             return environment.get(expression.variable.name);
 

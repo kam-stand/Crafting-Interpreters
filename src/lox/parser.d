@@ -200,7 +200,27 @@ class Parser
 
     Expr* expression()
     {
-        return equality();
+        return assignment();
+    }
+
+    Expr* assignment()
+    {
+        Expr* expr = equality();
+
+        if (match([TokenType.EQUAL]))
+        {
+            Token* equals = previous();
+            Expr* value = assignment();
+
+            if (expr.type == ExprType.EXPR_VARIABLE)
+            {
+                return makeAssign(expr.variable.name, value);
+            }
+
+            throw parseError(equals, "Invalid assignment target");
+        }
+
+        return expr;
     }
 
     Expr* equality()
