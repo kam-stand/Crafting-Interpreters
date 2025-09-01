@@ -161,7 +161,7 @@ class Scanner
         tokens ~= createToken(lexeme, type, line, createLiteral(number));
     }
 
-    // TODO: addToke(TokenType type bool val)
+    // TODO: addToken(TokenType type bool val)
 
     bool isAtEnd()
     {

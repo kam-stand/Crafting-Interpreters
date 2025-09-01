@@ -8,6 +8,7 @@ class Interpreter
 {
     // TODO: create VALUE struct which contains the final literal evaluation
     // TODO: CheckNumberOperands()
+    // TODO: remove assert statements
 
     Value evaluateExpression(Expr* expression)
     {
@@ -103,6 +104,7 @@ class Interpreter
 
         case TokenType.MINUS:
             assert(lhs.type == LiteralType.NUMBER && rhs.type == LiteralType.NUMBER, "Operands must be numbers");
+
             return value(lhs.number - rhs.number);
 
         case TokenType.STAR:
