@@ -1,2 +1,4 @@
 test*.lox
 bin/*.o
+
+src/test/bin
