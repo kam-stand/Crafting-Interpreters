@@ -3,12 +3,49 @@ import lox.expr;
 import lox.token;
 import lox.tokentype;
 import lox.value;
+import lox.stmt;
+import std.stdio;
 
 class Interpreter
 {
     // TODO: create VALUE struct which contains the final literal evaluation
     // TODO: CheckNumberOperands()
     // TODO: remove assert statements
+
+    void evalExpressionStmt(Stmt* statement)
+    {
+        Value eval = evaluateExpression(statement.exprStmt.expression);
+    }
+
+    void evalPrintStmt(Stmt* statement)
+    {
+        auto val = evaluateExpression(statement.exprStmt.expression);
+        writeln(stringify(val));
+
+    }
+
+    void interpret(Stmt*[] statements)
+    {
+        foreach (Stmt* stmt; statements)
+        {
+            executeStatements(stmt);
+        }
+    }
+
+    void executeStatements(Stmt* stmt)
+    {
+        switch (stmt.type)
+        {
+        case StmtType.EXPR_STMT:
+            evalExpressionStmt(stmt);
+            break;
+        case StmtType.PRINT_STMT:
+            evalPrintStmt(stmt);
+            break;
+        default:
+            assert(0, "Unknown Statement type");
+        }
+    }
 
     Value evaluateExpression(Expr* expression)
     {

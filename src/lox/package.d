@@ -21,19 +21,12 @@ void run(byte[] source)
 {
     Scanner scanner = new Scanner(source);
     auto tokens = scanner.scanTokens();
+
     Parser parser = new Parser(tokens);
+    auto statements = parser.parse(); // parse returns an array of Stmt*
 
-    while (!parser.isAtEnd())
-    {
-        Expr* expr = parser.expression(); // parse next expression
-        astPrinter(expr);
-        writeln(); // separate expressions
-        Interpreter interpreter = new Interpreter();
-        auto result = interpreter.evaluateExpression(expr);
-        writeln(stringify(result));
-
-    }
-
+    Interpreter interpreter = new Interpreter();
+    interpreter.interpret(statements);
 }
 
 void runPrompt()
