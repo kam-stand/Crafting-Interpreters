@@ -5,12 +5,21 @@ import lox.tokentype;
 import lox.value;
 import lox.stmt;
 import std.stdio;
+import lox.environment;
 
 class Interpreter
 {
     // TODO: create VALUE struct which contains the final literal evaluation
     // TODO: CheckNumberOperands()
     // TODO: remove assert statements
+
+    Environment globals = new Environment();
+    Environment environment; // TEMP!: same as globals 
+
+    this()
+    {
+        this.environment = this.globals;
+    }
 
     void evalExpressionStmt(Stmt* statement)
     {
@@ -22,6 +31,24 @@ class Interpreter
         auto val = evaluateExpression(statement.exprStmt.expression);
         writeln(stringify(val));
 
+    }
+
+    void evalVarStmt(Stmt* statement)
+    {
+        auto name = statement.varStmt.name;
+        auto initializer = statement.varStmt.initializer;
+
+        Value value;
+        if (initializer !is null)
+        {
+            value = evaluateExpression(initializer);
+        }
+        else
+        {
+            value.type = LiteralType.NULL;
+        }
+
+        environment.define(name.lexeme, value);
     }
 
     void interpret(Stmt*[] statements)
@@ -41,6 +68,9 @@ class Interpreter
             break;
         case StmtType.PRINT_STMT:
             evalPrintStmt(stmt);
+            break;
+        case StmtType.VARIABLE_STMT:
+            evalVarStmt(stmt);
             break;
         default:
             assert(0, "Unknown Statement type");
@@ -62,6 +92,8 @@ class Interpreter
 
         case ExprType.EXPR_GROUPING:
             return evalGrouping(expression.grouping);
+        case ExprType.EXPR_VARIABLE:
+            return environment.get(expression.variable.name);
 
         default:
             assert(0, "Cannot evaluate expression");
