@@ -7,7 +7,18 @@ import lox;
 
 class Environment
 {
+    Environment enclosing;
     Value[string] values;
+
+    this(Environment enclosing)
+    {
+        this.enclosing = enclosing;
+    }
+
+    this()
+    {
+
+    }
 
     void define(string name, Value val)
     {
@@ -20,6 +31,11 @@ class Environment
         {
             return *v;
         }
+        if (enclosing !is null)
+        {
+
+            return enclosing.get(name);
+        }
         throw runtimeError(name, "Undefined variable '" ~ name.lexeme ~ "'.");
     }
 
@@ -30,6 +46,12 @@ class Environment
             values[name.lexeme] = value;
             return;
         }
+
+        if (enclosing !is null)
+        {
+            enclosing.assign(name, value);
+        }
+
         throw runtimeError(name, "Undefined variable '" ~ name.lexeme ~ "'.");
     }
 }

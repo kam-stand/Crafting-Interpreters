@@ -103,7 +103,28 @@ class Parser
 
     Stmt* statement()
     {
-        return match([TokenType.PRINT]) ? printStatement() : expressionStatement();
+        if (match([TokenType.PRINT]))
+        {
+            return printStatement();
+        }
+        if (match([TokenType.LEFT_BRACE]))
+        {
+            return makeBlockStmt(block());
+        }
+
+        return expressionStatement();
+
+    }
+
+    Stmt*[] block()
+    {
+        Stmt*[] statements = [];
+        while (!(check(TokenType.RIGHT_BRACE)) && !isAtEnd())
+        {
+            statements ~= declaration();
+        }
+        consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
     }
 
     Stmt* printStatement()

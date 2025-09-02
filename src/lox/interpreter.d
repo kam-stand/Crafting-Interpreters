@@ -59,6 +59,19 @@ class Interpreter
         }
     }
 
+    void evalBlockStmt(Stmt*[] statements, Environment newEnv)
+    {
+        auto previous = environment;
+        scope (exit)
+            environment = previous;
+
+        environment = newEnv;
+        foreach (stmt; statements)
+        {
+            executeStatements(stmt);
+        }
+    }
+
     void executeStatements(Stmt* stmt)
     {
         switch (stmt.type)
@@ -71,6 +84,11 @@ class Interpreter
             break;
         case StmtType.VARIABLE_STMT:
             evalVarStmt(stmt);
+            break;
+        case StmtType.BLOCK_STMT:
+            auto blockStmt = stmt.blockStmt;
+            auto newEnv = new Environment(environment);
+            evalBlockStmt(blockStmt.statements, newEnv);
             break;
         default:
             assert(0, "Unknown Statement type");
