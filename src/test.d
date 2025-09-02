@@ -35,6 +35,7 @@ unittest
     assert(tokens[0].type == TokenType.LEFT_BRACE);
     assert(tokens[1].lexeme == "}");
     assert(tokens[1].type == TokenType.RIGHT_BRACE);
+
 }
 
 // -------------------------
