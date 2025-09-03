@@ -17,7 +17,7 @@ We are writing the interpreter for the lox language in the D programmig language
      Design Note: Static and Dynamic Typing
     [x] Statements and State
      Design Note: Implicit Variable Declaration
-    [ ] Control Flow
+    [x] Control Flow
      Design Note: Spoonfuls of Syntactic Sugar
     [ ] Functions
     [ ] Resolving and Binding
