@@ -30,7 +30,6 @@ unittest
     Value val = interp.evaluateExpression(expr);
 
     assert(val.number == 3);
-    writeln("\tGOT: ", val.number);
 
 }
 

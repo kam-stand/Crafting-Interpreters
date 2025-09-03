@@ -216,7 +216,7 @@ class Parser
 
     Expr* assignment()
     {
-        Expr* expr = equality();
+        Expr* expr = or();
 
         if (match([TokenType.EQUAL]))
         {
@@ -229,6 +229,38 @@ class Parser
             }
 
             throw parseError(equals, "Invalid assignment target");
+        }
+
+        return expr;
+    }
+    // TODO: might need reassignment
+    Expr* or()
+    {
+        Expr* expr = and(); // parse left side
+
+        while (match([TokenType.OR]))
+        {
+            Token* operator = previous();
+            Expr* right = and();
+
+            // Wrap in Expr* as EXPR_LOGICAL
+            expr = makeLogical(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    Expr* and()
+    {
+        Expr* expr = equality(); // or whatever your next lower precedence is
+
+        while (match([TokenType.AND]))
+        {
+            Token* operator = previous();
+            Expr* right = equality();
+
+            // Wrap in Expr* as EXPR_LOGICAL
+            expr = makeLogical(expr, operator, right);
         }
 
         return expr;

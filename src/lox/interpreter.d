@@ -105,6 +105,9 @@ class Interpreter
         case ExprType.EXPR_LITERAL:
             return evalLiteral(expression.literal);
 
+        case ExprType.EXPR_LOGICAL:
+            return evalLogical(expression.logical);
+
         case ExprType.EXPR_UNARY:
             return evalUnary(expression.unary);
 
@@ -125,6 +128,33 @@ class Interpreter
         default:
             assert(0, "Cannot evaluate expression");
         }
+    }
+
+    Value evalLogical(LogicalExpr* expr)
+    {
+        Value left = evaluateExpression(expr.left);
+
+        if (expr.operator.type == TokenType.OR)
+        {
+            // Short-circuit: if left is truthy, return it immediately
+            if (isTruthy(left))
+                return left;
+        }
+        else if (expr.operator.type == TokenType.AND)
+        {
+            // Short-circuit: if left is falsey, return it immediately
+            if (!isTruthy(left))
+                return left;
+        }
+
+        // Otherwise, evaluate right-hand side
+        return evaluateExpression(expr.right);
+    }
+
+    bool isTruthy(Value val)
+    {
+        return val.type == LiteralType.BOOLEAN ? val.val : val.type == LiteralType.NULL ? false
+            : true;
     }
 
     void evalIfStmt(Stmt* stmt)
