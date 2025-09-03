@@ -8,32 +8,13 @@ import lox.tokentype;
 import std.stdio;
 
 /** 
- *   // program        → statement* EOF ;
+ * statement      → exprStmt
+               | ifStmt
+               | printStmt
+               | block ;
 
-    // statement      → exprStmt
-    //                | printStmt ;
-
-    // exprStmt       → expression ";" ;
-    // printStmt      → "print" expression ";" ;
-
- */
-
-/** 
- * expression     → equality ;
-*  
-*    equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-* 
-*    comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-* 
-*    term           → factor ( ( "-" | "+" ) factor )* ;
-* 
-*    factor         → unary ( ( "/" | "*" ) unary )* ;
-*
-*    unary          → ( "!" | "-" ) unary
-*                   | primary ;
-* 
-*    primary        → NUMBER | STRING | "true" | "false" | "nil"
-*                 | "(" expression ")" ;
+ifStmt         → "if" "(" expression ")" statement
+               ( "else" statement )? ;
  */
 
 class Parser
@@ -46,18 +27,6 @@ class Parser
         this.tokens = tokens;
         current = 0;
     }
-
-    // Expr* parse()
-    // {
-    //     try
-    //     {
-    //         return expression();
-    //     }
-    //     catch (ParseError error)
-    //     {
-    //         return null;
-    //     }
-    // }
 
     Stmt*[] parse()
     {
@@ -103,6 +72,10 @@ class Parser
 
     Stmt* statement()
     {
+        if (match([TokenType.IF]))
+        {
+            return ifStatement();
+        }
         if (match([TokenType.PRINT]))
         {
             return printStatement();
@@ -113,6 +86,23 @@ class Parser
         }
 
         return expressionStatement();
+
+    }
+
+    Stmt* ifStatement()
+    {
+        consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
+        Expr* condition = expression();
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after 'condition'.");
+
+        Stmt* thenBranch = statement();
+        Stmt* elseBranch = null;
+        if (match([TokenType.ELSE]))
+        {
+            elseBranch = statement();
+        }
+
+        return makeIfStmt(condition, thenBranch, elseBranch);
 
     }
 

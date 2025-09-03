@@ -85,6 +85,9 @@ class Interpreter
         case StmtType.VARIABLE_STMT:
             evalVarStmt(stmt);
             break;
+        case StmtType.IF_STMT:
+            evalIfStmt(stmt);
+            break;
         case StmtType.BLOCK_STMT:
             auto blockStmt = stmt.blockStmt;
             auto newEnv = new Environment(environment);
@@ -121,6 +124,25 @@ class Interpreter
 
         default:
             assert(0, "Cannot evaluate expression");
+        }
+    }
+
+    void evalIfStmt(Stmt* stmt)
+    {
+        // evaluate condition expression
+        Value condition = evaluateExpression(stmt.ifStmt.condition);
+
+        // simple truthy check
+        bool condTruthy = condition.type == LiteralType.BOOLEAN ? condition.val
+            : condition.type == LiteralType.NULL ? false : true;
+
+        if (condTruthy)
+        {
+            executeStatements(stmt.ifStmt.thenBranch);
+        }
+        else if (stmt.ifStmt.elseBranch !is null)
+        {
+            executeStatements(stmt.ifStmt.elseBranch);
         }
     }
 
