@@ -11,10 +11,8 @@ import std.stdio;
 // ---------------
 unittest
 {
-    writeln("========== ADD ==========");
     Expr* left = makeLiteral(1.0); // numeric literal
     Expr* right = makeLiteral(2.0); // numeric literal
-    writefln("\tEXPECTED: %d", 1 + 2);
 
     BinaryExpr* bin = new BinaryExpr;
     bin.left = left;
@@ -42,10 +40,8 @@ unittest
 
 unittest
 {
-    writeln("========== SUBTRACT ==========");
     Expr* left = makeLiteral(10.0); // numeric literal
     Expr* right = makeLiteral(10.0); // numeric literal
-    writefln("\tEXPECTED: %d", 0);
 
     BinaryExpr* bin = new BinaryExpr;
     bin.left = left;
@@ -63,7 +59,6 @@ unittest
     Value val = interp.evaluateExpression(expr);
 
     assert(val.number == 0);
-    writeln("\tGOT: ", val.number);
 
 }
 
@@ -73,10 +68,8 @@ unittest
 
 unittest
 {
-    writeln("========== DIVIDE ==========");
     Expr* left = makeLiteral(10.0); // numeric literal
     Expr* right = makeLiteral(10.0); // numeric literal
-    writefln("\tEXPECTED: %d", 10 / 10);
 
     BinaryExpr* bin = new BinaryExpr;
     bin.left = left;
@@ -94,7 +87,6 @@ unittest
     Value val = interp.evaluateExpression(expr);
 
     assert(val.number == 1);
-    writeln("\tGOT: ", val.number);
 }
 
 // ---------------
@@ -102,10 +94,8 @@ unittest
 // ---------------
 unittest
 {
-    writeln("========== MULTIPLY ==========");
     Expr* left = makeLiteral(10.0); // numeric literal
     Expr* right = makeLiteral(10.0); // numeric literal
-    writefln("\tEXPECTED: %d", 10 * 10);
 
     BinaryExpr* bin = new BinaryExpr;
     bin.left = left;
@@ -123,7 +113,6 @@ unittest
     Value val = interp.evaluateExpression(expr);
 
     assert(val.number == 100);
-    writeln("\tGOT: ", val.number);
 
 }
 
@@ -132,10 +121,8 @@ unittest
 // ---------------
 unittest
 {
-    writeln("========== CONCAT ==========");
     Expr* left = makeLiteral("Hello"); // numeric literal
     Expr* right = makeLiteral(" world"); // numeric literal
-    writefln("\tEXPECTED: %s + %s =  % s", "Hello", " world", "Hello world");
 
     BinaryExpr* bin = new BinaryExpr;
     bin.left = left;
@@ -159,6 +146,5 @@ unittest
     assert(val.str.length == 11);
 
     assert(val.str == "Hello world");
-    writeln("\tGOT: ", val.str);
 
 }

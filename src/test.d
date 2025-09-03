@@ -10,7 +10,6 @@ import std.conv : to;
 // -------------------------
 unittest
 {
-    writeln("========== BASIC TOKEN TEST ==========");
 
     string test_file = "basic.lox";
     string content = "{} () != == >= <= + - / * \n";
@@ -43,7 +42,6 @@ unittest
 // -------------------------
 unittest
 {
-    writeln("========== STRING TEST ==========");
 
     string test_file = "string.lox";
     string content = `"Hello, World!" "Test123"`;
@@ -69,7 +67,6 @@ unittest
 // -------------------------
 unittest
 {
-    writeln("========== COMMENTS TEST ==========");
 
     string test_file = "comments.lox";
     string content = "123 // line comment\n456 /* block comment */ 789";
@@ -96,7 +93,6 @@ unittest
 // -------------------------
 unittest
 {
-    writeln("========== NEWLINE TEST ==========");
 
     string test_file = "newline.lox";
     string content = "{\n(\n)\n}";
@@ -121,7 +117,6 @@ unittest
 // -------------------------
 unittest
 {
-    writeln("========== COMMENTS TEST ==========");
 
     string test_file = "newline.lox";
     string content = "/* NO TOKENS ONLY EOF */ ";
@@ -142,7 +137,6 @@ unittest
 
 unittest
 {
-    writeln("========== EDGE CASE OPERATORS ==========");
 
     string test_file = "operators.lox";
     string content = "! == != =";
