@@ -72,6 +72,7 @@ class Parser
 
     Stmt* statement()
     {
+
         if (match([TokenType.IF]))
         {
             return ifStatement();
