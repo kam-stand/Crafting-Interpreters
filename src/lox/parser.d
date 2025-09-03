@@ -66,7 +66,7 @@ class Parser
             initializer = expression();
         }
 
-        consume(TokenType.SEMICOLON, "Expect ';' after varoable declaration");
+        consume(TokenType.SEMICOLON, "Expect ';' after variable declaration");
         return makeVariableStmt(name, initializer);
     }
 
@@ -80,12 +80,27 @@ class Parser
         {
             return printStatement();
         }
+        if (match([TokenType.WHILE]))
+        {
+            return whileStmt();
+        }
         if (match([TokenType.LEFT_BRACE]))
         {
             return makeBlockStmt(block());
         }
 
         return expressionStatement();
+
+    }
+
+    Stmt* whileStmt()
+    {
+        consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.");
+        Expr* condition = expression();
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after condition.");
+        Stmt* body_ = statement();
+
+        return makeWhileStmt(condition, body_);
 
     }
 
