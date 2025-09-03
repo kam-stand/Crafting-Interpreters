@@ -72,6 +72,10 @@ class Parser
 
     Stmt* statement()
     {
+        if (match([TokenType.FOR]))
+        {
+            return forStmt();
+        }
 
         if (match([TokenType.IF]))
         {
@@ -92,6 +96,67 @@ class Parser
 
         return expressionStatement();
 
+    }
+
+    Stmt* forStmt()
+    {
+        consume(TokenType.LEFT_PAREN, "Expect '(' after 'for'.");
+        Stmt* initializer;
+        if (match([TokenType.SEMICOLON]))
+        {
+            initializer = null;
+
+        }
+        else if (match([TokenType.VAR]))
+        {
+            initializer = varDeclaration();
+        }
+        else
+        {
+            initializer = expressionStatement();
+        }
+
+        Expr* condition = null;
+        if (!check(TokenType.SEMICOLON))
+        {
+            condition = expression();
+
+        }
+        consume(TokenType.SEMICOLON, "Expect ';' after loop condtion.");
+
+        Expr* increment = null;
+        if (!(check(TokenType.RIGHT_PAREN)))
+        {
+            increment = expression();
+        }
+        consume(TokenType.RIGHT_PAREN, "Expect ')', after for clauses");
+
+        Stmt* body_ = statement();
+
+        if (increment != null)
+        {
+            Stmt*[] stmts;
+            stmts ~= body_;
+
+            stmts ~= makeExprStmt(increment);
+
+            body_ = makeBlockStmt(stmts);
+
+        }
+
+        if (condition == null)
+        {
+            condition = makeLiteral(true);
+        }
+        body_ = makeWhileStmt(condition, body_);
+        if (initializer != null)
+        {
+            Stmt*[] stmts;
+            stmts ~= initializer;
+            stmts ~= body_;
+            body_ = makeBlockStmt(stmts);
+        }
+        return body_;
     }
 
     Stmt* whileStmt()
