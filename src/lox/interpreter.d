@@ -14,11 +14,11 @@ class Interpreter
     // TODO: remove assert statements
 
     Environment globals = new Environment();
-    Environment environment; // TEMP!: same as globals 
+    Environment* environment; // TEMP!: same as globals 
 
     this()
     {
-        this.environment = this.globals;
+        this.environment = &globals;
     }
 
     void evalExpressionStmt(Stmt* statement)
@@ -59,7 +59,7 @@ class Interpreter
         }
     }
 
-    void evalBlockStmt(Stmt*[] statements, Environment newEnv)
+    void evalBlockStmt(Stmt*[] statements, Environment* newEnv)
     {
         auto previous = environment;
         scope (exit)
@@ -88,10 +88,13 @@ class Interpreter
         case StmtType.IF_STMT:
             evalIfStmt(stmt);
             break;
+        case StmtType.WHILE_STMT:
+            evalWhileStmt(stmt);
+            break;
         case StmtType.BLOCK_STMT:
             auto blockStmt = stmt.blockStmt;
             auto newEnv = new Environment(environment);
-            evalBlockStmt(blockStmt.statements, newEnv);
+            evalBlockStmt(blockStmt.statements, &newEnv);
             break;
         default:
             assert(0, "Unknown Statement type");
@@ -127,6 +130,15 @@ class Interpreter
 
         default:
             assert(0, "Cannot evaluate expression");
+        }
+    }
+
+    void evalWhileStmt(Stmt* stmt)
+    {
+        // stmt.whileStmt should have .condition and .body
+        while (isTruthy(evaluateExpression(stmt.whileStmt.condition)))
+        {
+            executeStatements(stmt.whileStmt.body);
         }
     }
 
