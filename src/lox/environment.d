@@ -7,17 +7,17 @@ import lox;
 
 class Environment
 {
-    Environment enclosing;
+    Environment* enclosing; // use a pointer/reference
     Value[string] values;
 
-    this(Environment enclosing)
+    this(Environment* enclosing)
     {
         this.enclosing = enclosing;
     }
 
     this()
     {
-
+        this.enclosing = null;
     }
 
     void define(string name, Value val)
@@ -33,7 +33,6 @@ class Environment
         }
         if (enclosing !is null)
         {
-
             return enclosing.get(name);
         }
         throw runtimeError(name, "Undefined variable '" ~ name.lexeme ~ "'.");
@@ -50,6 +49,7 @@ class Environment
         if (enclosing !is null)
         {
             enclosing.assign(name, value);
+            return; // need to stop here
         }
 
         throw runtimeError(name, "Undefined variable '" ~ name.lexeme ~ "'.");
