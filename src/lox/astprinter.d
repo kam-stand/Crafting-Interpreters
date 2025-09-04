@@ -58,5 +58,8 @@ void printLiteral(LiteralExpr* literal)
     case LiteralType.NULL:
         write("nil"); // or "null"
         break;
+    case LiteralType.CALLABLE:
+        lit.callable.toString();
+        break;
     }
 }

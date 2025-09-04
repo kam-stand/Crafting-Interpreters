@@ -3,6 +3,7 @@ import lox.token;
 import std.stdio;
 import std.format;
 import std.conv;
+import lox.callable;
 
 /** 
  * VALUE
@@ -18,6 +19,7 @@ struct Value
         string str;
         double number;
         bool val;
+        LoxCallable callable;
     }
 }
 
@@ -60,6 +62,15 @@ Value value()
     return v;
 }
 
+Value value(LoxCallable fn)
+{
+    Value v = value();
+    v.type = LiteralType.CALLABLE;
+    v.callable = fn;
+    return v;
+
+}
+
 string stringify(Value value)
 {
     final switch (value.type)
@@ -72,5 +83,7 @@ string stringify(Value value)
         return value.str;
     case LiteralType.NULL:
         return "nil";
+    case LiteralType.CALLABLE:
+        return value.callable.toString();
     }
 }

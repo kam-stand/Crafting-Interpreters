@@ -4,13 +4,15 @@ import std.variant;
 import std.format;
 import std.stdio;
 import std.conv : to;
+import lox.callable;
 
 enum LiteralType
 {
     STRING,
     NUMBER,
     BOOLEAN,
-    NULL
+    NULL,
+    CALLABLE
 }
 
 struct Literal
@@ -24,6 +26,7 @@ struct Literal
         string str;
         double number;
         bool boolean;
+        LoxCallable callable;
     }
 
 }
@@ -75,6 +78,14 @@ Token* createToken(string lexeme, TokenType type, int line, Literal* lit = null)
     return new Token(type, lexeme, lit, line);
 }
 
+Literal* createLiteral(LoxCallable fn)
+{
+    auto lit = new Literal;
+    lit.type = LiteralType.CALLABLE;
+    lit.callable = fn;
+    return lit;
+}
+
 string literalToString(Literal* lit)
 {
     if (lit is null)
@@ -90,6 +101,9 @@ string literalToString(Literal* lit)
         return lit.boolean.to!string;
     case LiteralType.NULL:
         return "null";
+    case LiteralType.CALLABLE:
+        return lit.callable.toString();
+
     }
 
     return "unknown"; // fallback

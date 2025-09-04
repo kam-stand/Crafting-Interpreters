@@ -314,7 +314,7 @@ class Parser
 
         return expr;
     }
-    // TODO: might need reassignment
+
     Expr* or()
     {
         Expr* expr = and(); // parse left side
@@ -424,7 +424,47 @@ class Parser
             return makeUnary(operator, right);
         }
 
-        return primary();
+        return call();
+    }
+
+    Expr* call()
+    {
+        Expr* expr = primary();
+
+        while (true)
+        {
+            if (match([TokenType.LEFT_PAREN]))
+            {
+                expr = finishCall(expr);
+
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return expr;
+
+    }
+
+    Expr* finishCall(Expr* callee)
+    {
+
+        Expr*[] arguments = [];
+        if (!check(TokenType.RIGHT_PAREN))
+        {
+            do
+            {
+                arguments ~= expression();
+            }
+            while (match([TokenType.COMMA]));
+        }
+
+        Token* parent = consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.");
+
+        return makeCall(callee, parent, arguments);
+
     }
 
     Expr* primary()

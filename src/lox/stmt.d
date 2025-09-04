@@ -100,8 +100,6 @@ struct Stmt
 
 }
 
-// TODO: create funciont for all StmtTypes 
-
 Stmt* makeBlockStmt(Stmt*[] statements)
 {
     BlockStmt* blockStmt = new BlockStmt(statements);

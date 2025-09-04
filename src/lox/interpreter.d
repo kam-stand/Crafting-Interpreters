@@ -6,6 +6,11 @@ import lox.value;
 import lox.stmt;
 import std.stdio;
 import lox.environment;
+import lox.error;
+import lox.callable;
+import core.time;
+import std.datetime;
+import std.format;
 
 class Interpreter
 {
@@ -16,9 +21,28 @@ class Interpreter
     Environment globals = new Environment();
     Environment* environment; // TEMP!: same as globals 
 
+    class ClockFn : LoxCallable
+    {
+        override int arity()
+        {
+            return 0;
+        }
+
+        override Value call(Value[] args)
+        {
+            return value(cast(double) std.datetime.Clock.currTime().toUnixTime());
+        }
+
+        override string toString()
+        {
+            return "<native fn>";
+        }
+    }
+
     this()
     {
         this.environment = &globals;
+        globals.define("clock", value(new ClockFn()));
     }
 
     void evalExpressionStmt(Stmt* statement)
@@ -114,6 +138,9 @@ class Interpreter
         case ExprType.EXPR_UNARY:
             return evalUnary(expression.unary);
 
+        case ExprType.EXPR_CALL:
+            return evalCallExpr(expression.call);
+
         case ExprType.EXPR_BINARY:
             return evalBinary(expression.binary);
 
@@ -131,6 +158,59 @@ class Interpreter
         default:
             assert(0, "Cannot evaluate expression");
         }
+    }
+
+    // Value evalCallExpr(CallExpr* call)
+    // {
+    //     Value callee = evaluateExpression(call.callee);
+
+    //     if (callee.type != LiteralType.CALLABLE)
+    //     {
+    //         throw runtimeError(call.parent, "Can only call functions and classes");
+    //     }
+
+    //     Value[] arguments;
+    //     foreach (arg; call.arguments)
+    //     {
+    //         arguments ~= evaluateExpression(arg);
+    //     }
+
+    //     auto function_ = callee.callable;
+
+    //     if (arguments.length != function_.arity)
+    //     {
+    //         throw new runtimeError(call.paren,
+    //             format("Expected %s arguments but got %s.", function_.arity(), arguments.length));
+    //     }
+
+    //     return function_.call(arguments);
+
+    // }
+
+    Value evalCallExpr(CallExpr* call)
+    {
+        Value callee = evaluateExpression(call.callee);
+
+        if (callee.type != LiteralType.CALLABLE)
+        {
+            throw runtimeError(call.parent, "Can only call functions and classes.");
+        }
+
+        Value[] arguments;
+        foreach (arg; call.arguments)
+        {
+            arguments ~= evaluateExpression(arg);
+        }
+
+        auto function_ = callee.callable;
+
+        if (arguments.length != function_.arity())
+        {
+            throw runtimeError(call.parent,
+                format("Expected %s arguments but got %s.", function_.arity(), arguments.length));
+        }
+
+        return function_.call(arguments);
     }
 
     void evalWhileStmt(Stmt* stmt)
@@ -190,7 +270,7 @@ class Interpreter
 
     Value evalLiteral(LiteralExpr* expr)
     {
-        final switch (expr.value.type)
+        switch (expr.value.type)
         {
         case LiteralType.NUMBER:
             // return cast(double) expr.value.number;
@@ -205,6 +285,8 @@ class Interpreter
         case LiteralType.STRING:
             // assert(0, "Strings not yet supported in evaluation");
             return value(expr.value.str);
+        default:
+            assert(0, "not supported literal type");
         }
     }
 
@@ -230,7 +312,7 @@ class Interpreter
     {
         if (a.type != b.type)
             return false;
-        final switch (a.type)
+        switch (a.type)
         {
         case LiteralType.NUMBER:
             return a.number == b.number;
@@ -240,6 +322,8 @@ class Interpreter
             return a.str == b.str;
         case LiteralType.NULL:
             return true;
+        default:
+            assert(0, "Does not support");
         }
         return false;
     }

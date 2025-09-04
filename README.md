@@ -2,7 +2,10 @@
 
 ## [book](https://craftinginterpreters.com/scanning.html#the-interpreter-framework)
 
-We are writing the interpreter for the lox language in the D programmig language.
+This repository contains my own implementation of the `j-lox` language written in the D programming language.
+We can call it `d-lox` as the first half of the book implenets j-lox in jave.
+
+> You will notice that despite D support object oriented paradigms I did not use the visitor pattern as I wanted to showcase the flexibility D provides.
 
 ## Chapter
 
