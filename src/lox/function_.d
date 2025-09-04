@@ -32,8 +32,7 @@ class LoxFunction : LoxCallable
         }
         try
         {
-
-            auto interp = new Interpreter();
+            Interpreter interp = new Interpreter();
             interp.evalBlockStmt(declaration.body, &env);
 
         }

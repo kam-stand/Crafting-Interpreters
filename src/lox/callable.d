@@ -2,6 +2,7 @@ module lox.callable;
 
 import lox.value;
 import std.string;
+import lox.interpreter;
 
 interface LoxCallable
 {
