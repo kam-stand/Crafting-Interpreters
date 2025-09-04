@@ -11,6 +11,7 @@ import lox.callable;
 import core.time;
 import std.datetime;
 import std.format;
+import lox.function_;
 
 class Interpreter
 {
@@ -96,6 +97,12 @@ class Interpreter
         }
     }
 
+    void evalFuncStmt(Stmt* stmt)
+    {
+        auto func = new LoxFunction(stmt.funcStmt, environment);
+        environment.define(stmt.funcStmt.name.lexeme, value(func));
+    }
+
     void executeStatements(Stmt* stmt)
     {
         switch (stmt.type)
@@ -114,6 +121,9 @@ class Interpreter
             break;
         case StmtType.WHILE_STMT:
             evalWhileStmt(stmt);
+            break;
+        case StmtType.FUNC_STMT:
+            evalFuncStmt(stmt);
             break;
         case StmtType.BLOCK_STMT:
             auto blockStmt = stmt.blockStmt;

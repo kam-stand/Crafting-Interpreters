@@ -44,6 +44,11 @@ class Parser
     {
         try
         {
+            if (match([TokenType.FUN]))
+            {
+                return functionDeclaration("function");
+            }
+
             if (match([TokenType.VAR]))
             {
                 return varDeclaration();
@@ -55,6 +60,30 @@ class Parser
             synchronize();
             return null;
         }
+    }
+
+    Stmt* functionDeclaration(string kind)
+    {
+        Token* name = consume(TokenType.IDENTIFIER, "Expect " ~ kind ~ " " ~ " name");
+        consume(TokenType.LEFT_PAREN, "Expect '(' after function call");
+        Token*[] parameters = [];
+        if (!check(TokenType.RIGHT_PAREN))
+        {
+            do
+            {
+                if (parameters.length >= 255)
+                {
+                    error(peek().line, "Cant have more than 255 params");
+                }
+                parameters ~= consume(TokenType.IDENTIFIER, "Expect paramater name");
+            }
+            while (match([TokenType.COMMA]));
+        }
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters");
+
+        consume(TokenType.LEFT_BRACE, "Expect '{' before " ~ kind ~ " body");
+        Stmt*[] body_ = block();
+        return makeFuncStmt(name, parameters, body_);
     }
 
     Stmt* varDeclaration()
