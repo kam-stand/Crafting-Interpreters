@@ -4,6 +4,7 @@ import lox.stmt;
 import lox.environment;
 import lox.value;
 import lox.interpreter;
+import lox.error;
 
 class LoxFunction : LoxCallable
 {
@@ -29,9 +30,17 @@ class LoxFunction : LoxCallable
         {
             env.define(params.lexeme, arguments[i]);
         }
-        auto interp = new Interpreter();
-        interp.evalBlockStmt(declaration.body, &env);
+        try
+        {
 
+            auto interp = new Interpreter();
+            interp.evalBlockStmt(declaration.body, &env);
+
+        }
+        catch (ReturnException r)
+        {
+            return r.value;
+        }
         return value();
     }
 

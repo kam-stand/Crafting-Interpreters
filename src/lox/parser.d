@@ -114,6 +114,12 @@ class Parser
         {
             return printStatement();
         }
+
+        if (match([TokenType.RETURN]))
+        {
+            return returnStatement();
+        }
+
         if (match([TokenType.WHILE]))
         {
             return whileStmt();
@@ -125,6 +131,19 @@ class Parser
 
         return expressionStatement();
 
+    }
+
+    Stmt* returnStatement()
+    {
+        Token* keyword = previous();
+        Expr* value = null;
+        if (!check(TokenType.SEMICOLON))
+        {
+            value = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Expect ';' after return value");
+        return makeReturnStmt(keyword, value);
     }
 
     Stmt* forStmt()

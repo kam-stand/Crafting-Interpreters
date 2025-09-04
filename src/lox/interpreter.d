@@ -103,6 +103,21 @@ class Interpreter
         environment.define(stmt.funcStmt.name.lexeme, value(func));
     }
 
+    void evalReturnStmt(Stmt* stmt)
+    {
+        Value val;
+        if (stmt.returnStmt.value !is null)
+        {
+            val = evaluateExpression(stmt.returnStmt.value);
+        }
+        else
+        {
+            val = value(); //  nil
+        }
+
+        throw new ReturnException(val);
+    }
+
     void executeStatements(Stmt* stmt)
     {
         switch (stmt.type)
@@ -124,6 +139,9 @@ class Interpreter
             break;
         case StmtType.FUNC_STMT:
             evalFuncStmt(stmt);
+            break;
+        case StmtType.RETURN_STMT:
+            evalReturnStmt(stmt);
             break;
         case StmtType.BLOCK_STMT:
             auto blockStmt = stmt.blockStmt;

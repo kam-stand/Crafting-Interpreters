@@ -2,6 +2,7 @@ module lox.error;
 import std.stdio;
 import lox.token;
 import lox.tokentype;
+import lox.value;
 
 void error(int line, string message)
 {
@@ -63,4 +64,15 @@ RuntimeError runtimeError(Token* token, string message)
     }
 
     return new RuntimeError(token, message);
+}
+
+class ReturnException : Exception
+{
+    Value value;
+
+    this(Value value)
+    {
+        super("Return");
+        this.value = value;
+    }
 }
